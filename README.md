@@ -1,0 +1,1 @@
+Processador MIPS 8bits.

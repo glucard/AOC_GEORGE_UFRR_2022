@@ -1,1 +1,1 @@
-Processador MIPS 8bits.
+Processador RISC de 8 bits.

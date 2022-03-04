@@ -30,7 +30,7 @@ architecture Behavioral of ALU is
 				result <= a or b; -- or
 			
 			when "100" =>
-				if (a < b) then -- slt
+				if (a< b) then -- slt
 					result <= x"0001";
 				else
 					result <= x"0000";
@@ -48,7 +48,7 @@ architecture Behavioral of ALU is
 		
 	end process;
 	
-	zero <= '1' when result=x"0000" else '0';
-	alu_result = result;
+	zero_flag <= '1' when (result=x"0000") else '0';
+	alu_result <= result;
 
 end Behavioral;

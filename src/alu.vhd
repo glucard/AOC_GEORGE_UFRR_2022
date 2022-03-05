@@ -6,7 +6,7 @@ entity ALU is
 	port(
 		a: in std_logic_vector(7 downto 0);
 		b: in std_logic_vector(7 downto 0);
-		alu_control: in std_logic_vector(2 downto 0);
+		alu_control: in std_logic_vector(3 downto 0);
 		
 		alu_result: out std_logic_vector(7 downto 0);
 		zero_flag: out std_logic
@@ -17,30 +17,33 @@ architecture Behavioral of ALU is
 	signal result: std_logic_vector(7 downto 0);
 	begin process(a, b, alu_control)
 		begin case alu_control is
-			when "000" =>
+			when "0000" =>
 				result <= a+b; -- add
 				
-			when "001" =>
+			when "0001" =>
 				result <= a-b; -- sub
 				
-			when "010" =>
+			when "0010" =>
 				result <= a and b; -- and
 				
-			when "011" =>
+			when "0011" =>
 				result <= a or b; -- or
 			
-			when "100" =>
+			when "0100" =>
 				if (a< b) then -- slt
 					result <= x"0001";
 				else
 					result <= x"0000";
 				end if;
 				
-			when "101" =>
+			when "0101" =>
 				result <= a; -- lw
 				
-			when "110" =>
+			when "0110" =>
 				result <= a; -- sw
+				
+			when "0111" =>
+				result <= a; -- li
 				
 			when others => result <= a + b; -- add
 			

@@ -6,7 +6,7 @@ entity ALU_VHDL is
 	port(
 		a: in std_logic_vector(7 downto 0);
 		b: in std_logic_vector(7 downto 0);
-		alu_control: in std_logic_vector(3 downto 0);
+		alu_op: in std_logic_vector(3 downto 0);
 		
 		alu_result: out std_logic_vector(7 downto 0);
 		zero_flag: out std_logic
@@ -15,8 +15,8 @@ end ALU_VHDL;
 
 architecture Behavioral of ALU_VHDL is
 	signal result: std_logic_vector(7 downto 0);
-	begin process(a, b, alu_control)
-		begin case alu_control is
+	begin process(a, b, alu_op)
+		begin case alu_op is
 			when "0000" =>
 				result <= a+b; -- add
 				

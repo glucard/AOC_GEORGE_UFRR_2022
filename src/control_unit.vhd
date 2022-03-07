@@ -5,9 +5,9 @@ USE IEEE.numeric_std.all;
 
 entity CONTROL_UNIT_VHDL is
 	port(
-		opcode : in std_logic_vector(3 downto 0);
+		opcode : in std_logic_vector(2 downto 0);
 		reset: in std_logic;
-		ALU_op : out std_logic_vector(3 downto 0);
+		ALU_op : out std_logic_vector(2 downto 0);
 		mem_read, mem_write_en, reg_write_li : out std_logic;
 		reg_write_en : out std_logic;
 		branch : out std_logic;
@@ -29,7 +29,7 @@ architecture Behavioral of CONTROL_UNIT_VHDL is
 			ALU_src <= '0';
 		else 
 			case opcode is
-				when "0000" => -- add
+				when "000" => -- add, sub
 					ALU_op <= opcode;
 					mem_read <= '0';
 					mem_write_en <= '0';
@@ -38,7 +38,7 @@ architecture Behavioral of CONTROL_UNIT_VHDL is
 					branch <= '0';
 					ALU_src <= '0';
 					
-				when "0001" => -- sub
+				when "001" => -- blank
 					ALU_op <= opcode;
 					mem_read <= '0';
 					mem_write_en <= '0';
@@ -47,7 +47,7 @@ architecture Behavioral of CONTROL_UNIT_VHDL is
 					branch <= '0';
 					ALU_src <= '0';
 					
-				when "0010" => -- and
+				when "010" => -- and
 					ALU_op <= opcode;
 					mem_read <= '0';
 					mem_write_en <= '0';
@@ -56,7 +56,7 @@ architecture Behavioral of CONTROL_UNIT_VHDL is
 					branch <= '1';
 					ALU_src <= '0';
 					
-				when "0011" => -- or
+				when "011" => -- or
 					ALU_op <= opcode;
 					mem_read <= '0';
 					mem_write_en <= '0';
@@ -65,7 +65,7 @@ architecture Behavioral of CONTROL_UNIT_VHDL is
 					branch <= '1';
 					ALU_src <= '0';
 					
-				when "0100" =>  -- slt
+				when "100" =>  -- slt
 					ALU_op <= opcode;
 					mem_read <= '0';
 					mem_write_en <= '0';
@@ -74,7 +74,7 @@ architecture Behavioral of CONTROL_UNIT_VHDL is
 					branch <= '1';
 					ALU_src <= '0';
 					
-				when "0101" => -- lw
+				when "101" => -- lw
 					ALU_op <= opcode;
 					mem_read <= '1';
 					mem_write_en <= '0';
@@ -83,7 +83,7 @@ architecture Behavioral of CONTROL_UNIT_VHDL is
 					branch <= '0';
 					ALU_src <= '0';
 					
-				when "0110" => -- sw
+				when "110" => -- sw
 					ALU_op <= opcode;
 					mem_read <= '0';
 					mem_write_en <= '1';
@@ -92,7 +92,7 @@ architecture Behavioral of CONTROL_UNIT_VHDL is
 					branch <= '0';
 					ALU_src <= '0';
 					
-				when "0111" => -- li
+				when "111" => -- li
 					ALU_op <= opcode;
 					mem_read <= '0';
 					mem_write_en <= '0';

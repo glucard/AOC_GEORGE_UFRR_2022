@@ -11,14 +11,14 @@ entity INSTRUCTION_MEMORY_VHDL is
 end INSTRUCTION_MEMORY_VHDL;
 
 architecture Behavioral of INSTRUCTION_MEMORY_VHDL is
-	type rom_type is array (0 to 3) of std_logic_vector(7 downto 0);
+	type rom_type is array (0 to 4) of std_logic_vector(7 downto 0);
 	
 	constant rom_data : rom_type :=(
-		"01110001", -- li $0 1
-		"01110101", -- li $1 1
-		"00001000", -- add $2 $0
-		"00001001"--, -- add $2 $1
-		-- "01111111" -- li $3 3
+		"11100111", -- li $0 7
+		"11101010", -- li $1 2
+		"00010000", -- add $2 $0
+		"00010011",--, -- sub $2 $1
+		"11010110" -- sw $2 $3
 	);
 begin
 	instruction <= rom_data(to_integer(unsigned(pc)));

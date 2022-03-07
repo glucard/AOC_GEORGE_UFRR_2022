@@ -15,7 +15,8 @@ architecture Behavioral of RISC8BITPROCESSOR is
 	signal pc_current, pc2, pc_next : std_logic_vector(7 downto 0);
 	signal instruction :std_logic_vector(7 downto 0);
 	signal ALU_out :std_logic_vector(7 downto 0);
-	signal ALU_op : std_logic_vector(3 downto 0);
+	signal ALU_control_out : std_logic_vector(3 downto 0);
+	signal alu_op : std_logic_vector(2 downto 0);
 	signal ALU_src, mem_read, mem_write_en, reg_write_li, reg_write_en, branch, zero_flag : std_logic;
 	signal reg_read_data_1, reg_read_data_2, a, b, mem_read_data, mux_memAlu_out, reg_write_data_li : std_logic_vector(7 downto 0);
 	
@@ -38,7 +39,7 @@ architecture Behavioral of RISC8BITPROCESSOR is
 	);
 	
 	Control_Unit : entity work.CONTROL_UNIT_VHDL port map(
-		opcode => instruction(7 downto 4),
+		opcode => instruction(7 downto 5),
 		reset => reset,
 		ALU_op => ALU_op,
 		mem_read => mem_read,
@@ -49,29 +50,35 @@ architecture Behavioral of RISC8BITPROCESSOR is
 		ALU_src => ALU_src
 	);
 	
-	reg_write_data_li <=  "000000" & instruction(1 downto 0) when (reg_write_li = '1') else "00000000";
+	reg_write_data_li <=  "00000" & instruction(2 downto 0) when (reg_write_li = '1') else "00000000";
 	
 	Register_File : entity work.REGISTER_FILE_VHDL port map(
 		clk => clk,
 		rst => reset,
 		reg_write_en => reg_write_en,
-		reg_write_dest => instruction(3 downto 2),
+		reg_write_dest => instruction(4 downto 3),
 		reg_write_data => mux_memAlu_out,
 		reg_write_li => reg_write_li,
 		reg_write_data_li => reg_write_data_li,
-		reg_read_addr_1 => instruction(3 downto 2),
+		reg_read_addr_1 => instruction(4 downto 3),
 		reg_read_data_1 => reg_read_data_1,
-		reg_read_addr_2 => instruction(1 downto 0),
+		reg_read_addr_2 => instruction(2 downto 1),
 		reg_read_data_2 => reg_read_data_2
 	);
 	
 	a <= reg_read_data_1;
 	b <= reg_read_data_2;
 	
+	
+	ALU_control : entity work.ALU_CONTROL_VHDL port map(
+		Alu_op => Alu_op,
+		ALU_Funct => instruction(0),
+		ALU_control => ALU_control_out
+	);
 	ALU : entity work.ALU_VHDL port map(
 		a => a,
 		b => b,
-		alu_control => ALU_op,
+		alu_op => ALU_control_out,
 		alu_result => ALU_out,
 		zero_flag => zero_flag 
 	);

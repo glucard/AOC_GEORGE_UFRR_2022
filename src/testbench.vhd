@@ -9,7 +9,9 @@ architecture behavior of testbench is
 		clk : in std_logic;
 		reset : in std_logic;
 		pc_out : out std_logic_vector(7 downto 0);
-		alu_result : out std_logic_vector(7 downto 0)
+		alu_result : out std_logic_vector(7 downto 0);
+		register1_out : out std_logic_vector(7 downto 0);
+		register2_out : out std_logic_vector(7 downto 0)
 	);
 	end component;
 	
@@ -18,6 +20,7 @@ architecture behavior of testbench is
    --Outputs
    signal pc_out : std_logic_vector(7 downto 0);
    signal alu_result : std_logic_vector(7 downto 0);
+   signal register1_out, register2_out : std_logic_vector(7 downto 0);
    -- Clock period definitions
    constant clk_period : time := 10 ns;
 	
@@ -27,6 +30,8 @@ BEGIN
           clk => clk,
           reset => reset,
           pc_out => pc_out,
+			 register1_out => register1_out,
+			 register2_out => register2_out,
           alu_result => alu_result
         );
 

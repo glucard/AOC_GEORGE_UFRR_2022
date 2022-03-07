@@ -9,6 +9,8 @@ entity REGISTER_FILE_VHDL is
 		reg_write_en: in std_logic;
 		reg_write_dest: in std_logic_vector(1 downto 0);
 		reg_write_data: in std_logic_vector(7 downto 0);
+		reg_write_li: in std_logic;
+		reg_write_data_li: in std_logic_vector(7 downto 0);
 		reg_read_addr_1: in std_logic_vector(1 downto 0);
 		reg_read_data_1: out std_logic_vector(7 downto 0);
 		reg_read_addr_2: in std_logic_vector(1 downto 0);
@@ -29,6 +31,8 @@ architecture Behavioral of REGISTER_FILE_VHDL is
 		elsif (rising_edge(clk)) then
 			if (reg_write_en = '1') then
 				reg_array(to_integer(unsigned(reg_write_dest))) <= reg_write_data;
+			elsif (reg_write_li = '1') then
+				reg_array(to_integer(unsigned(reg_write_dest))) <= reg_write_data_li;
 			end if;
 		end if;
 	end process;

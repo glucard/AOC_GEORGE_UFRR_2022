@@ -3,7 +3,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_signed.ALL;
 USE IEEE.numeric_std.all;
 
-entity ALU_CONTROL_VHDL is
+entity CONTROL_UNIT_VHDL is
 	port(
 		opcode : in std_logic_vector(3 downto 0);
 		ALU_op : out std_logic_vector(3 downto 0);
@@ -12,9 +12,9 @@ entity ALU_CONTROL_VHDL is
 		reg_write : out std_logic;
 		branch : out std_logic
 	);
-end ALU_CONTROL_VHDL;
+end CONTROL_UNIT_VHDL;
 
-architecture Behavioral of ALU_CONTROL_VHDL is
+architecture Behavioral of CONTROL_UNIT_VHDL is
 
 	begin process(opcode)
 		

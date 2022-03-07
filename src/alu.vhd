@@ -2,7 +2,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_signed.ALL;
 
-entity ALU is
+entity ALU_VHDL is
 	port(
 		a: in std_logic_vector(7 downto 0);
 		b: in std_logic_vector(7 downto 0);
@@ -11,9 +11,9 @@ entity ALU is
 		alu_result: out std_logic_vector(7 downto 0);
 		zero_flag: out std_logic
 	);
-end ALU;
+end ALU_VHDL;
 
-architecture Behavioral of ALU is
+architecture Behavioral of ALU_VHDL is
 	signal result: std_logic_vector(7 downto 0);
 	begin process(a, b, alu_control)
 		begin case alu_control is
@@ -31,9 +31,9 @@ architecture Behavioral of ALU is
 			
 			when "0100" =>
 				if (a< b) then -- slt
-					result <= x"0001";
+					result <= "00000001";
 				else
-					result <= x"0000";
+					result <= "00000000";
 				end if;
 				
 			when "0101" =>
@@ -51,7 +51,7 @@ architecture Behavioral of ALU is
 		
 	end process;
 	
-	zero_flag <= '1' when (result=x"0000") else '0';
+	zero_flag <= '1' when (result="00000000") else '0';
 	alu_result <= result;
 
 end Behavioral;

@@ -20,12 +20,14 @@ architecture Behavioral of ALU_CONTROL_VHDL is
 				else
 					ALU_CONTROL <= "0001";
 				end if;
-				
+			when "001" =>
+				ALU_CONTROL <= "1000"; -- jump
+			
 			when "010" =>
 				ALU_CONTROL <= "0" & ALU_op; -- and
 				
 			when "011" =>
-				ALU_CONTROL <= "0" & ALU_op; -- or
+				ALU_CONTROL <= "0" & ALU_op; -- beq
 			
 			when "100" =>
 				ALU_CONTROL <= "0" & ALU_op; -- slt

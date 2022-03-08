@@ -13,11 +13,12 @@ end RISC8BITPROCESSOR;
 
 architecture Behavioral of RISC8BITPROCESSOR is
 	signal pc_current, pc2, pc_next : std_logic_vector(7 downto 0);
+	signal pc_jump, pc_mux_out : std_logic_vector(7 downto 0);
 	signal instruction :std_logic_vector(7 downto 0);
 	signal ALU_out :std_logic_vector(7 downto 0);
 	signal ALU_control_out : std_logic_vector(3 downto 0);
 	signal alu_op : std_logic_vector(2 downto 0);
-	signal ALU_src, mem_read, mem_write_en, reg_write_li, reg_write_en, branch, zero_flag : std_logic;
+	signal ALU_src, mem_read, mem_write_en, reg_write_li, reg_write_en, branch, zero_flag, jump, and_branch_alu: std_logic;
 	signal reg_read_data_1, reg_read_data_2, a, b, mem_read_data, mux_memAlu_out, reg_write_data_li : std_logic_vector(7 downto 0);
 	
 	begin process(clk, reset)
@@ -37,11 +38,14 @@ architecture Behavioral of RISC8BITPROCESSOR is
 		pc => pc_current,
 		instruction => instruction
 	);
+
+	pc_jump <= "000" & instruction(4 downto 0);
 	
 	Control_Unit : entity work.CONTROL_UNIT_VHDL port map(
 		opcode => instruction(7 downto 5),
 		reset => reset,
 		ALU_op => ALU_op,
+		jump => jump,
 		mem_read => mem_read,
 		mem_write_en => mem_write_en,
 		reg_write_li => reg_write_li,
@@ -94,8 +98,26 @@ architecture Behavioral of RISC8BITPROCESSOR is
 	
 	mux_memAlu_out <= mem_read_data when (mem_read = '1') else alu_out;
 	
-	pc_next <= pc2;
+	Jump_Mux : entity work.JUMP_MUX_VHDL port map(
+		jump => jump,
+		pc_jump => pc_jump,
+		pc2 => pc2,
+		pc_out => pc_mux_out
+	);
+	
+	and_branch_alu <= branch and zero_flag;
+	
+	Branch_Mux : entity work.BRANCH_MUX_VHDL port map(
+		en => and_branch_alu,
+		-- offset : in std_logic;
+		pc_next => pc_mux_out,
+		pc_out => pc_next
+	);
+	
+	
+	
 	pc_out <= pc_current;
+	
 	ALU_result <= ALU_out;
 	register1_out <= reg_read_data_1;
 	register2_out <= reg_read_data_2;

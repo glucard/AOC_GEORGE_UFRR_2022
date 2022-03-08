@@ -27,8 +27,12 @@ architecture Behavioral of ALU_VHDL is
 				result <= a and b; -- and
 				
 			when "0011" =>
-				result <= a or b; -- or
-			
+				if (a = b) then
+					result <= "00000001"; -- beq
+				else
+					result <= "00000000";
+				end if;
+				
 			when "0100" =>
 				if (a< b) then -- slt
 					result <= "00000001";
@@ -44,6 +48,9 @@ architecture Behavioral of ALU_VHDL is
 				
 			when "0111" =>
 				result <= a; -- li
+				
+			when "1000" =>
+				result <= a; -- jump
 				
 			when others => result <= a + b; -- add
 			

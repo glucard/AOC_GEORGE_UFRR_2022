@@ -7,18 +7,21 @@ entity RISC8BITPROCESSOR is
 	port(
 		clk, reset : in std_logic;
 		pc_out, alu_result : out std_logic_vector(7 downto 0);
-		register1_out, register2_out : out std_logic_vector(7 downto 0)
+		register1_out, register2_out : out std_logic_vector(7 downto 0);
+		mem_read_out, mem_write_en_out, reg_write_li_out, reg_write_en_out, immediate_en_out, immediate_en_gate_out, branch_out, zero_flag_out, jump_out, and_branch_alu_out: out std_logic;
+		instruction_out : out std_logic_vector(7 downto 0)
 	);
 end RISC8BITPROCESSOR;
 
 architecture Behavioral of RISC8BITPROCESSOR is
 	signal pc_current, pc2, pc_next : std_logic_vector(7 downto 0);
 	signal pc_jump, pc_mux_out : std_logic_vector(7 downto 0);
+	signal immediate : std_logic_vector(7 downto 0);
 	signal instruction :std_logic_vector(7 downto 0);
 	signal ALU_out :std_logic_vector(7 downto 0);
 	signal ALU_control_out : std_logic_vector(3 downto 0);
 	signal alu_op : std_logic_vector(2 downto 0);
-	signal ALU_src, mem_read, mem_write_en, reg_write_li, reg_write_en, branch, zero_flag, jump, and_branch_alu: std_logic;
+	signal ALU_src, mem_read, mem_write_en, reg_write_li, reg_write_en, immediate_en, immediate_en_gate, branch, zero_flag, jump, and_branch_alu: std_logic;
 	signal reg_read_data_1, reg_read_data_2, a, b, mem_read_data, mux_memAlu_out, reg_write_data_li : std_logic_vector(7 downto 0);
 	
 	begin process(clk, reset)
@@ -41,6 +44,8 @@ architecture Behavioral of RISC8BITPROCESSOR is
 
 	pc_jump <= "000" & instruction(4 downto 0);
 	
+	immediate <= "000000" &  instruction(2 downto 1);
+	
 	Control_Unit : entity work.CONTROL_UNIT_VHDL port map(
 		opcode => instruction(7 downto 5),
 		reset => reset,
@@ -51,7 +56,8 @@ architecture Behavioral of RISC8BITPROCESSOR is
 		reg_write_li => reg_write_li,
 		reg_write_en => reg_write_en,
 		branch => branch,
-		ALU_src => ALU_src
+		ALU_src => ALU_src,
+		immediate_en => immediate_en
 	);
 	
 	reg_write_data_li <=  "00000" & instruction(2 downto 0) when (reg_write_li = '1') else "00000000";
@@ -87,13 +93,17 @@ architecture Behavioral of RISC8BITPROCESSOR is
 		zero_flag => zero_flag 
 	);
 	
+	immediate_en_gate <= immediate_en and instruction(0);
+	
 	Data_Memory : entity work.DATA_MEMORY_VHDL port map(
 		clk => clk,
-		mem_access_addr => reg_read_data_2,
+		mem_access_addr_register => reg_read_data_2,
+		mem_access_addr_immediate => immediate,
 		mem_write_data => reg_read_data_1,
 		mem_write_en => mem_write_en,
 		mem_read => mem_read,
-		mem_read_data => mem_read_data
+		mem_read_data => mem_read_data,
+		immediate_en => immediate_en_gate
 	);
 	
 	mux_memAlu_out <= mem_read_data when (mem_read = '1') else alu_out;
@@ -121,5 +131,18 @@ architecture Behavioral of RISC8BITPROCESSOR is
 	ALU_result <= ALU_out;
 	register1_out <= reg_read_data_1;
 	register2_out <= reg_read_data_2;
+	instruction_out <= instruction;
+	
+	
+	mem_read_out <= mem_read;
+	mem_write_en_out <= mem_write_en;
+	reg_write_li_out <= reg_write_li;
+	reg_write_en_out <= reg_write_en;
+	immediate_en_out <= immediate_en;
+	immediate_en_gate_out <= immediate_en_gate;
+	branch_out <= branch;
+	zero_flag_out <= zero_flag;
+	jump_out <= jump;
+	and_branch_alu_out <= and_branch_alu;
 	
 end Behavioral;

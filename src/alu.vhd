@@ -34,7 +34,7 @@ architecture Behavioral of ALU_VHDL is
 				end if;
 				
 			when "0100" =>
-				if (a< b) then -- slt
+				if (a < b) then -- slt
 					result <= "00000001";
 				else
 					result <= "00000000";
